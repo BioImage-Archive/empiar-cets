@@ -1,5 +1,6 @@
 from empiar_cets.yaml_parsing import RegionDirective
-from empiar_cets.empiar_utils import EMPIARFileList, get_files_matching_pattern, read_mrc_header_pyfs
+from empiar_cets.empiar_utils import EMPIARFileList, get_files_matching_pattern
+from empiar_cets.metadata_utils import read_mrc_header
 
 
 def create_cets_tomograms_from_region_directive(
@@ -25,7 +26,7 @@ def create_cets_tomograms_from_region_directive(
         
         # Read MRC header information
         file_path = f"/empiar/world_availability/{accession_no}/data/{tomogram_paths[0]}"
-        mrc_header_info = read_mrc_header_pyfs(file_path)
+        mrc_header_info = read_mrc_header(file_path)
 
         cets_tomogram_dict["width"] = mrc_header_info["dimensions"][0]
         cets_tomogram_dict["height"] = mrc_header_info["dimensions"][1]

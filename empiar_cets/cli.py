@@ -2,10 +2,10 @@ import typer
 
 import cryoet_metadata._base._models
 
-from cets_utils import dict_to_cets_model, save_cets_model_to_json
+from .cets_utils import dict_to_cets_model, save_cets_model_to_json
 from .empiar_utils import get_files_for_empiar_entry_cached
 from .yaml_parsing import load_empiar_yaml, parse_regions
-from cets.region import create_cets_region_from_region_directive
+from .cets.region import create_cets_region_from_region_directive
 
 app = typer.Typer()
 

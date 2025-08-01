@@ -10,8 +10,6 @@ from typing import List
 from pydantic import BaseModel
 from fs.ftpfs import FTPFS
 
-from .empiar_models import Entry
-
 
 class EMPIARFile(BaseModel, frozen=True):
     path: Path
@@ -63,7 +61,7 @@ def get_files_for_empiar_entry_cached(
 ) -> EMPIARFileList:
     
     #FIXME - do the caching properly, use a separately configurable path
-    cache_dirpath = Path(f"local-data/{accession_id}/cache")
+    cache_dirpath = Path(f"local-data/{accession_id}/files")
     cache_dirpath.mkdir(exist_ok=True, parents=True)
     file_list_fpath = cache_dirpath / "all_files.json"
 
