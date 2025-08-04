@@ -1,12 +1,9 @@
-[project]
+[tool.poetry]
 name = "empiar-cets"
 version = "0.1.0"
 description = "A package for converting EBI EMPIAR data to cryoET standards, CETS."
-authors = [
-    {name = "Chr1st0p43rR",email = "190404576+Chr1st0p43rR@users.noreply.github.com"}
-]
+authors = []
 readme = "README.md"
-requires-python = ">=3.11"
 packages = [{include = "empiar_cets"}]
 
 [tool.poetry.dependencies]
