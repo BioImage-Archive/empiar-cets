@@ -36,7 +36,7 @@ class Tomogram(BaseModel):
 
 
 # TODO: should metadata be a list? In what circumstances will there be multiple files, and what formats?
-class RegionDirective(BaseModel):
+class RegionDefinition(BaseModel):
     title: str
     movie_metadata: Optional[MovieMetadata] = None
     movie_stacks: Optional[List[MovieStack]] = None
@@ -67,12 +67,12 @@ def load_empiar_yaml(accession_id: str) -> dict:
     
 
 def parse_regions(
-        directive_dict: dict,
-) -> list[RegionDirective]:
+        definition_dict: dict,
+) -> list[RegionDefinition]:
     
     regions = []
-    for region in directive_dict["regions"]:
-        region_directive = RegionDirective.model_validate(region)
-        regions.append(region_directive)
+    for region in definition_dict["regions"]:
+        region_definition = RegionDefinition.model_validate(region)
+        regions.append(region_definition)
     
     return regions

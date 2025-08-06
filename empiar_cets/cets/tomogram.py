@@ -1,11 +1,11 @@
-from empiar_cets.yaml_parsing import RegionDirective
+from empiar_cets.yaml_parsing import RegionDefinition
 from empiar_cets.empiar_utils import EMPIARFileList, get_files_matching_pattern
 from empiar_cets.metadata_utils import read_mrc_header
 
 
-def create_cets_tomograms_from_region_directive(
+def create_cets_tomograms_from_region_definition(
         accession_id: str,
-        region: RegionDirective, 
+        region: RegionDefinition, 
         empiar_files: EMPIARFileList
 ) -> list[dict]:
     

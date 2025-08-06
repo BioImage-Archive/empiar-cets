@@ -1,18 +1,18 @@
 from pathlib import Path
 
-from empiar_cets.yaml_parsing import RegionDirective, MovieStack
+from empiar_cets.yaml_parsing import RegionDefinition, MovieStack
 from empiar_cets.empiar_utils import EMPIARFileList, get_files_matching_pattern
 from empiar_cets.metadata_models import MdocFile
 
 
-def create_cets_movie_stack_collection_from_region_directive(
+def create_cets_movie_stack_collection_from_region_definition(
         accession_id: str,
-        region: RegionDirective,
+        region: RegionDefinition,
         empiar_files: EMPIARFileList, 
         movie_metadata: MdocFile = None, 
 ) -> list[dict]:
     
-    cets_movie_stacks = create_cets_movie_stacks_from_region_directive(accession_id, region, empiar_files, movie_metadata)
+    cets_movie_stacks = create_cets_movie_stacks_from_region_definition(accession_id, region, empiar_files, movie_metadata)
     cets_movie_stack_series = [{"stacks": cets_movie_stacks}]
 
     cets_movie_stack_collection = {"movie_stacks": cets_movie_stack_series}
@@ -22,9 +22,9 @@ def create_cets_movie_stack_collection_from_region_directive(
     return [cets_movie_stack_collection]
 
 
-def create_cets_movie_stacks_from_region_directive(
+def create_cets_movie_stacks_from_region_definition(
         accession_id: str,
-        region: RegionDirective, 
+        region: RegionDefinition, 
         empiar_files: EMPIARFileList, 
         movie_metadata: MdocFile = None,
 ) -> list[dict]:

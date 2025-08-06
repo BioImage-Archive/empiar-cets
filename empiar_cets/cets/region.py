@@ -1,16 +1,16 @@
-from empiar_cets.yaml_parsing import RegionDirective
+from empiar_cets.yaml_parsing import RegionDefinition
 from empiar_cets.empiar_utils import EMPIARFileList
 
-from empiar_cets.cets.movie_stack_collection import create_cets_movie_stack_collection_from_region_directive
-from empiar_cets.cets.tilt_series import create_cets_tilt_series_from_region_directive
-from empiar_cets.cets.alignment import create_cets_alignment_from_region_directive
-from empiar_cets.cets.tomogram import create_cets_tomograms_from_region_directive
+from empiar_cets.cets.movie_stack_collection import create_cets_movie_stack_collection_from_region_definition
+from empiar_cets.cets.tilt_series import create_cets_tilt_series_from_region_definition
+from empiar_cets.cets.alignment import create_cets_alignment_from_region_definition
+from empiar_cets.cets.tomogram import create_cets_tomograms_from_region_definition
 from empiar_cets.metadata_utils import load_mdoc_with_cache, load_xf_with_cache
 
 
-def create_cets_region_from_region_directive(
+def create_cets_region_from_region_definition(
         accession_id: str,
-        region: RegionDirective, 
+        region: RegionDefinition, 
         empiar_files: EMPIARFileList,
 ) -> dict:
     
@@ -25,7 +25,7 @@ def create_cets_region_from_region_directive(
         )
     
     if region.movie_stacks:
-        cets_movie_stack_collection = create_cets_movie_stack_collection_from_region_directive(
+        cets_movie_stack_collection = create_cets_movie_stack_collection_from_region_definition(
             accession_id, 
             region, 
             empiar_files, 
@@ -41,7 +41,7 @@ def create_cets_region_from_region_directive(
         )
 
     if region.tilt_series:
-        cets_tilt_series = create_cets_tilt_series_from_region_directive(
+        cets_tilt_series = create_cets_tilt_series_from_region_definition(
             accession_id, 
             region, 
             empiar_files, 
@@ -54,11 +54,11 @@ def create_cets_region_from_region_directive(
             region.alignments.file_pattern, 
             region.alignments.label
         )
-        cets_alignments = create_cets_alignment_from_region_directive(alignment_metadata)
+        cets_alignments = create_cets_alignment_from_region_definition(alignment_metadata)
         cets_region["alignments"] = cets_alignments
     
     if region.tomograms:
-        cets_tomograms = create_cets_tomograms_from_region_directive(
+        cets_tomograms = create_cets_tomograms_from_region_definition(
             accession_id, 
             region, 
             empiar_files

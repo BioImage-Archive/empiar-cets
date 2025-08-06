@@ -1,5 +1,5 @@
 
-def create_cets_alignment_from_region_directive(
+def create_cets_alignment_from_region_definition(
         alignment_metadata: dict,
 ) -> list[dict]:
     
