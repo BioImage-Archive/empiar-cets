@@ -1,0 +1,34 @@
+regions:
+  - title: "TS_006"
+  # TODO: specify type of metadata, some identifier. 
+  # Since we also have a "refined" mdocs avaiable, at least for this entry.
+    movie_metadata:
+      label: "TS_006_mdoc_original"
+      file_pattern: "Control/frames/mdocs_ori/TS_006.mdoc"
+    movie_stacks:
+      - label: "TS_006_-0-0"
+        file_pattern: "Control/frames/TS_006_00001_-0.0.tif"
+      - label: "TS_006_2-0"
+        file_pattern: "Control/frames/TS_006_00002_2.0.tif"
+      - label: "TS_006_-2-0"
+        file_pattern: "Control/frames/TS_006_00003_-2.0.tif"
+    tilt_series_metadata:
+      label: "TS_006_mdoc_modified"
+      file_pattern: "Control/metadata/mdocs_modified/TS_006.mdoc"
+    tilt_series:
+      - label: "TS_006"
+        file_pattern: "Control/metadata/TS_006.st"
+    alignments:
+      label: "TS_006_xf"
+      file_pattern: "Control/metadata/TS_006.xf"
+    tomograms:
+      - label: "TS_006_tomo"
+        file_pattern: "Control/tomograms/TS_006_aretomo.mrc" 
+  - title: "TS_007"
+    movie_stacks:
+      - label: "TS_007_0-0"
+        file_pattern: "Control/frames/TS_007_00001_-0.0.tif"
+      - label: "TS_007_2-0"
+        file_pattern: "Control/frames/TS_007_00002_2.0.tif"
+      - label: "TS_007_-2-0"
+        file_pattern: "Control/frames/TS_007_00003_-2.0.tif"

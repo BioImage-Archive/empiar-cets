@@ -1,0 +1,7 @@
+__pycache__
+.env
+.vscode
+model_store
+*.DS_Store
+**/poetry.lock
+local-data/
