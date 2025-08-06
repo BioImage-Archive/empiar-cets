@@ -3,7 +3,7 @@ from empiar_cets.empiar_utils import EMPIARFileList
 
 from empiar_cets.cets.movie_stack_collection import create_cets_movie_stack_collection_from_region_definition
 from empiar_cets.cets.tilt_series import create_cets_tilt_series_from_region_definition
-from empiar_cets.cets.alignment import create_cets_alignment_from_region_definition
+from empiar_cets.cets.alignment import create_cets_alignment_from_alignment_metadata
 from empiar_cets.cets.tomogram import create_cets_tomograms_from_region_definition
 from empiar_cets.metadata_utils import load_mdoc_with_cache, load_xf_with_cache
 
@@ -54,7 +54,7 @@ def create_cets_region_from_region_definition(
             region.alignments.file_pattern, 
             region.alignments.label
         )
-        cets_alignments = create_cets_alignment_from_region_definition(alignment_metadata)
+        cets_alignments = create_cets_alignment_from_alignment_metadata(alignment_metadata)
         cets_region["alignments"] = cets_alignments
     
     if region.tomograms:
