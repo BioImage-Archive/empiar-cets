@@ -26,7 +26,7 @@ def load_mdoc_from_json(filepath: str) -> MdocFile:
     with open(filepath, 'r') as f:
         data = json.load(f)
     
-    return MdocFile.from_dict(data)
+    return MdocFile(**data)
 
 
 def load_alignment_from_json(filepath: str) -> dict[str, Any]:
