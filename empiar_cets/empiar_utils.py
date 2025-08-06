@@ -4,6 +4,8 @@ import rich
 import parse
 import tempfile
 import os
+import aioftp
+import asyncio
 import urllib.request
 from pathlib import Path
 from typing import List
@@ -56,7 +58,36 @@ def get_list_of_empiar_files(accession_no: str) -> EMPIARFileList:
     return EMPIARFileList(files=empiar_files)
 
 
-def get_files_for_empiar_entry_cached(
+async def get_list_of_empiar_files_ftp_async(accession_no: str) -> EMPIARFileList:
+
+    root_path = Path(f"/empiar/world_availability/{accession_no}")
+    data_path = root_path / "data"
+
+    empiar_files = []
+
+    async with aioftp.Client.context("ftp.ebi.ac.uk") as client:
+        try:
+            async for path, path_info in client.list(data_path, recursive=True):
+                if path_info["type"] == "file":
+                    rel_path = path.relative_to(root_path)
+                    empiar_file = EMPIARFile(
+                        path=rel_path, 
+                        size_in_bytes=path_info.get("size", 0)
+                    )
+                    empiar_files.append(empiar_file)
+        except aioftp.StatusCodeError as e:
+            # skip directories/files we can't access
+            pass
+    
+    return EMPIARFileList(files=empiar_files)
+
+
+def get_empiar_files_ftp(accession_no: str) -> EMPIARFileList:
+    file_list = asyncio.run(get_list_of_empiar_files_ftp_async(accession_no))
+    return file_list
+
+
+def get_list_of_files_for_empiar_entry_cached(
         accession_id: str
 ) -> EMPIARFileList:
     
