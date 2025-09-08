@@ -80,12 +80,12 @@ def get_files_for_empiar_entry_cached(
     return list_of_files
 
 
-def download_metadata_file_from_empiar(
+def download_file_from_empiar(
         url: str, 
         file_type: str, 
 ) -> str:
     
-    allowed_file_types = ['mdoc', 'xf']
+    allowed_file_types = ["mdoc", "xf", "star"]
     if file_type not in allowed_file_types:
         raise ValueError(f"Invalid file type. Only {allowed_file_types} supported.")
 

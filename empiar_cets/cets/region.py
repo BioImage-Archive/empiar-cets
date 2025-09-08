@@ -5,6 +5,7 @@ from empiar_cets.cets.movie_stack_collection import create_cets_movie_stack_coll
 from empiar_cets.cets.tilt_series import create_cets_tilt_series_from_region_definition
 from empiar_cets.cets.alignment import create_cets_alignment_from_alignment_metadata
 from empiar_cets.cets.tomogram import create_cets_tomograms_from_region_definition
+from empiar_cets.cets.annotations import create_cets_annotations_from_region_definition
 from empiar_cets.metadata_utils import load_mdoc_with_cache, load_xf_with_cache
 
 
@@ -64,6 +65,14 @@ def create_cets_region_from_region_definition(
             empiar_files
         )
         cets_region["tomograms"] = cets_tomograms
+    
+    if region.annotations:
+        cets_annotations = create_cets_annotations_from_region_definition(
+            accession_id, 
+            region, 
+            empiar_files
+        )
+        cets_region["annotations"] = cets_annotations
 
     return cets_region
 

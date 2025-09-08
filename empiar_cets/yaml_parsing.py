@@ -35,6 +35,15 @@ class Tomogram(BaseModel):
     file_pattern: str
 
 
+class Annotation(BaseModel):
+    label: str
+    annotation_type: str
+    file_name: str
+    block_name: Optional[str] = None 
+    image_name: Optional[str] = None
+    tomogram_column: Optional[str] = None
+
+
 # TODO: should metadata be a list? In what circumstances will there be multiple files, and what formats?
 class RegionDefinition(BaseModel):
     title: str
@@ -44,7 +53,8 @@ class RegionDefinition(BaseModel):
     tilt_series: Optional[List[TiltSeries]] = None
     alignments: Optional[Alignment] = None
     tomograms: Optional[List[Tomogram]] = None 
-    
+    annotations: Optional[List[Annotation]] = None
+
 
 def load_empiar_yaml(accession_id: str) -> dict:
 

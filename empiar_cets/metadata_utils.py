@@ -5,14 +5,15 @@ from pathlib import Path
 from fs.ftpfs import FTPFS
 from typing import Any, Union, List
 
+from .empiar_utils import download_file_from_empiar
 from .metadata_models import MdocFile, ZValueSection
-from .empiar_utils import download_metadata_file_from_empiar
+from .utils import make_local_file_cache
 
 
 def save_mdoc_to_json(mdoc: MdocFile, filepath: str) -> None:
     
     with open(filepath, 'w') as f:
-        json.dump(mdoc.to_dict(), f, indent=2)
+        f.write(mdoc.model_dump_json(indent=2))
 
 
 def save_alignment_to_json(alignment: dict[str, Any], filepath: str) -> None:
@@ -37,28 +38,15 @@ def load_alignment_from_json(filepath: str) -> dict[str, Any]:
     return data
 
 
-def load_metdata_file_with_cache(
-        accession_id: str,
-        file_type: str,
-        file_label: str,
-) -> Path:
-
-    cache_dirpath = Path(f"local-data/{accession_id}/{file_type}")
-    cache_dirpath.mkdir(exist_ok=True, parents=True)
-    cache_path = cache_dirpath / f"{file_label}.json"
-
-    return cache_path
-
-
 def load_mdoc_with_cache(
         accession_id: str, 
         file_pattern: str,
         mdoc_label: str,
 ) -> MdocFile:
     
-    cache_path = load_metdata_file_with_cache(
+    cache_path = make_local_file_cache(
         accession_id, 
-        file_type='mdoc', 
+        file_type="mdoc", 
         file_label=mdoc_label
     )
     
@@ -68,7 +56,7 @@ def load_mdoc_with_cache(
     accession_no = accession_id.split("-")[1]
     url_base = "https://ftp.ebi.ac.uk/empiar/world_availability/" 
     url = f"{url_base}{accession_no}/data/{file_pattern}"
-    temp_mdoc_path = download_metadata_file_from_empiar(url, file_type='mdoc')
+    temp_mdoc_path = download_file_from_empiar(url, file_type='mdoc')
     
     try:
         mdoc = parse_mdoc_file(temp_mdoc_path)
@@ -86,9 +74,9 @@ def load_xf_with_cache(
         xf_label: str,
 ) -> dict[str, Any]:
     
-    cache_path = load_metdata_file_with_cache(
+    cache_path = make_local_file_cache(
         accession_id, 
-        file_type='xf', 
+        file_type="xf", 
         file_label=xf_label
     )
     
@@ -98,7 +86,7 @@ def load_xf_with_cache(
     accession_no = accession_id.split("-")[1]
     url_base = "https://ftp.ebi.ac.uk/empiar/world_availability/" 
     url = f"{url_base}{accession_no}/data/{file_pattern}"
-    temp_xf_path = download_metadata_file_from_empiar(url, file_type='xf')
+    temp_xf_path = download_file_from_empiar(url, file_type='xf')
     
     try:
         alignment = parse_xf_file(temp_xf_path)
@@ -222,8 +210,8 @@ def parse_mdoc_file(filepath: str) -> MdocFile:
         
         # Handle comments (lines starting with [T = )
         if line.startswith('[T =') and line.endswith(']'):
-            comment = line[4:-1].strip()  # Remove [T = and ]
-            mdoc.comments.append(comment)
+            # comment = line[4:-1].strip()  # Remove [T = and ]
+            # mdoc.comments.append(comment)
             continue
         
         # Handle ZValue sections
@@ -248,7 +236,7 @@ def parse_mdoc_file(filepath: str) -> MdocFile:
             if in_global_headers:
                 mdoc.global_headers[key] = parsed_value
             elif current_section is not None:
-                current_section[key] = parsed_value
+                current_section.metadata[key] = parsed_value
     
     return mdoc
 
@@ -260,27 +248,27 @@ def read_mrc_header(filepath):
     """
     # TODO: local file version
 
-    ftp_url = 'ftp.ebi.ac.uk'
+    ftp_url = "ftp.ebi.ac.uk"
 
     with FTPFS(ftp_url) as ftp_fs:
-        with ftp_fs.open(filepath, 'rb') as f:
+        with ftp_fs.open(filepath, "rb") as f:
             header_data = f.read(1024)
     
     # Parse MRC header - 
     # Format: nx, ny, nz, mode, nxstart, nystart, nzstart, mx, my, mz
-    header_ints = struct.unpack('<10i', header_data[:40])
+    header_ints = struct.unpack("<10i", header_data[:40])
     
     # Bytes 40-52: cell dimensions (3 floats)
-    cell_dims = struct.unpack('<3f', header_data[40:52])
+    cell_dims = struct.unpack("<3f", header_data[40:52])
     
     # Bytes 52-64: cell angles (3 floats) 
-    cell_angles = struct.unpack('<3f', header_data[52:64])
+    cell_angles = struct.unpack("<3f", header_data[52:64])
     
     # TODO: currently don't use all of these, find a CETS home for them?
     return {
-        'dimensions': header_ints[:3],  # nx, ny, nz
-        'mode': header_ints[3],         # data type
-        'cell_dimensions': cell_dims,
-        'cell_angles': cell_angles
+        "dimensions": header_ints[:3],  # nx, ny, nz
+        "mode": header_ints[3],         # data type
+        "cell_dimensions": cell_dims,
+        "cell_angles": cell_angles
     }
 
