@@ -1,15 +1,16 @@
 import json
-import requests
-import rich
+import logging
+import os
 import parse
 import tempfile
-import os
 import urllib.request
 from pathlib import Path
 from typing import List
 from pydantic import BaseModel
 from fs.ftpfs import FTPFS
 
+
+logger = logging.getLogger(__name__)
 
 class EMPIARFile(BaseModel, frozen=True):
     path: Path
@@ -31,7 +32,7 @@ def get_files_matching_pattern(
         result = parse.parse(file_pattern, str(file.path))
         if result is not None:
             selected_file_references.append(str(file.path))
-    rich.print(f"Found {len(selected_file_references)} file references matching pattern {file_pattern}")
+    logger.info(f"Found {len(selected_file_references)} file references matching pattern {file_pattern}")
 
     return selected_file_references
 

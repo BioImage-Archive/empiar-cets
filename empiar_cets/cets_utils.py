@@ -1,10 +1,12 @@
-import rich
 import json
+import logging
 from pathlib import Path
 from typing import Any, Optional, Type
 from pydantic import BaseModel, ValidationError
 from pydantic.alias_generators import to_snake
 
+
+logger = logging.getLogger(__name__)
 
 def dict_to_cets_model(
     dict: dict[str, Any],
@@ -15,8 +17,8 @@ def dict_to_cets_model(
     try:
         cets_model = cets_model_class.model_validate(dict)
     except ValidationError as e:
-        rich.print(
-            f"[red]Validation error for {cets_model_class.__name__} with data: {dict}. Error: {e}[/red]"
+        logger.error(
+            f"Validation error for {cets_model_class.__name__} with data: {dict}. Error: {e}"
         )
     
     return cets_model
@@ -47,5 +49,6 @@ def save_cets_model_to_json(
 
     with open(model_path, 'w') as f:
         json.dump(cets_model.model_dump(), f, indent=2)
-    rich.print(f"[green]Saved CETS model to {model_path}[/green]")
+    
+    logger.info(f"Saved CETS model to {model_path}")
 

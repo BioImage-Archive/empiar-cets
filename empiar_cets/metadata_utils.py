@@ -1,6 +1,7 @@
 import json
-import struct
+import logging
 import re
+import struct
 from pathlib import Path
 from fs.ftpfs import FTPFS
 from typing import Any, Union, List
@@ -9,6 +10,8 @@ from .empiar_utils import download_file_from_empiar
 from .metadata_models import MdocFile, ZValueSection
 from .utils import make_local_file_cache
 
+
+logger = logging.getLogger(__name__)
 
 def save_mdoc_to_json(mdoc: MdocFile, filepath: str) -> None:
     
@@ -146,13 +149,13 @@ def parse_xf_file(
         # Parse the six values: a11 a12 a21 a22 dx dy
         values = line.split()
         if len(values) != 6:
-            print(f"Warning: Line {i+1} has {len(values)} values instead of 6, skipping")
+            logger.warning(f"Warning: Line {i+1} has {len(values)} values instead of 6, skipping")
             continue
         
         try:
             a11, a12, a21, a22, dx, dy = [float(v) for v in values]
         except ValueError as e:
-            print(f"Warning: Could not parse line {i+1}: {line}, error: {e}")
+            logger.warning(f"Warning: Could not parse line {i+1}: {line}, error: {e}")
             continue
         
         affine_transform = {
