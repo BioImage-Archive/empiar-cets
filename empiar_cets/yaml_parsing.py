@@ -39,7 +39,6 @@ class Annotation(BaseModel):
     label: str
     annotation_type: str
     file_name: str
-    block_name: Optional[str] = None 
     image_name: Optional[str] = None
     tomogram_column: Optional[str] = None
 

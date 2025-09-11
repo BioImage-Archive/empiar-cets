@@ -97,6 +97,9 @@ def create_tomogram_thumbnail(
     else:
         raise ValueError("Method must be 'max', 'mean', or 'middle'")
     
+    # TODO: some check of orientation?
+    # TODO: and dimensions?
+    projection = np.flipud(projection) 
     projection = projection.astype(np.float64)
     projection = (projection - projection.min()) / (projection.max() - projection.min())
     projection = (projection * 255).astype(np.uint8)
