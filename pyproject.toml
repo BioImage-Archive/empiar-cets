@@ -20,6 +20,7 @@ parse = "^1.20.2"
 pydantic-settings = "^2.10.1"
 gemmi = "^0.7.3"
 starfile = "^0.5.13"
+mrcfile = "^1.5.4"
 
 [tool.poetry.scripts]
 empiar-cets = "empiar_cets.cli:app"
