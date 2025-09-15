@@ -6,7 +6,7 @@ from empiar_cets.cets.tilt_series import create_cets_tilt_series_from_region_def
 from empiar_cets.cets.alignment import create_cets_alignment_from_alignment_metadata
 from empiar_cets.cets.tomogram import create_cets_tomograms_from_region_definition
 from empiar_cets.cets.annotations import create_cets_annotations_from_region_definition
-from empiar_cets.metadata_utils import load_mdoc_with_cache, load_xf_with_cache
+from empiar_cets.metadata_utils import load_mdoc_file, load_xf_file
 
 
 def create_cets_region_from_region_definition(
@@ -19,7 +19,7 @@ def create_cets_region_from_region_definition(
 
     movie_metadata = None
     if region.movie_metadata:
-        movie_metadata = load_mdoc_with_cache(
+        movie_metadata = load_mdoc_file(
             accession_id, 
             region.movie_metadata.file_pattern, 
             region.movie_metadata.label
@@ -35,7 +35,7 @@ def create_cets_region_from_region_definition(
         cets_region["movie_stack_collections"] = cets_movie_stack_collection
     
     if region.tilt_series_metadata:
-        tilt_series_metadata = load_mdoc_with_cache(
+        tilt_series_metadata = load_mdoc_file(
             accession_id, 
             region.tilt_series_metadata.file_pattern, 
             region.tilt_series_metadata.label
@@ -50,7 +50,7 @@ def create_cets_region_from_region_definition(
         cets_region["tilt_series"] = cets_tilt_series
 
     if region.alignments:
-        alignment_metadata = load_xf_with_cache(
+        alignment_metadata = load_xf_file(
             accession_id, 
             region.alignments.file_pattern, 
             region.alignments.label

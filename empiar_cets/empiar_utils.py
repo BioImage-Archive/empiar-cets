@@ -12,6 +12,9 @@ from fs.ftpfs import FTPFS
 
 logger = logging.getLogger(__name__)
 
+EMPIAR_BASE_URL = "https://ftp.ebi.ac.uk/empiar/world_availability/"
+
+
 class EMPIARFile(BaseModel, frozen=True):
     path: Path
     size_in_bytes: int
@@ -32,6 +35,10 @@ def get_files_matching_pattern(
         result = parse.parse(file_pattern, str(file.path))
         if result is not None:
             selected_file_references.append(str(file.path))
+
+    if len(selected_file_references) == 0:
+        raise ValueError(f"No files found matching pattern: {file_pattern}")
+    
     logger.info(f"Found {len(selected_file_references)} file references matching pattern {file_pattern}")
 
     return selected_file_references
@@ -82,14 +89,15 @@ def get_files_for_empiar_entry_cached(
 
 
 def download_file_from_empiar(
-        url: str, 
-        file_type: str, 
+        accession_id: str, 
+        file_name: str, 
 ) -> str:
     
-    allowed_file_types = ["mdoc", "xf", "star"]
-    if file_type not in allowed_file_types:
-        raise ValueError(f"Invalid file type. Only {allowed_file_types} supported.")
-
+    accession_no = accession_id.split("-")[1]
+    empiar_path = f"{accession_no}/data/{file_name}"
+    url = f"{EMPIAR_BASE_URL}{empiar_path}"
+    
+    file_type = Path(file_name).suffix[1:]
     temp_fd, local_path = tempfile.mkstemp(suffix=f".{file_type}", prefix=f"{file_type}_")
     os.close(temp_fd)
     

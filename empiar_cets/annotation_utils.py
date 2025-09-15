@@ -4,7 +4,7 @@ from pandas import DataFrame
 from pathlib import Path
 
 from .empiar_utils import download_file_from_empiar
-from .utils import make_local_file_cache
+from .utils import make_local_data_path
 
 
 def filter_starfile_df(
@@ -21,7 +21,7 @@ def filter_starfile_df(
     return filtered_df
 
 
-def load_annotation_star_file_with_cache(
+def load_annotation_star_file(
         accession_id: str, 
         star_label: str, 
         file_name: str, 
@@ -29,19 +29,16 @@ def load_annotation_star_file_with_cache(
         tomogram_column: Optional[str] = "rlnMicrographName", 
 ) -> str:
     
-    cache_path = make_local_file_cache(
+    local_data_path = make_local_data_path(
         accession_id, 
         file_type="star", 
         file_label=star_label
     )
 
-    if Path(cache_path).exists():
-        return str(cache_path)
+    if Path(local_data_path).exists():
+        return str(local_data_path)
     
-    accession_no = accession_id.split("-")[1]
-    url_base = "https://ftp.ebi.ac.uk/empiar/world_availability/" 
-    url = f"{url_base}{accession_no}/data/{file_name}"
-    temp_star_path = download_file_from_empiar(url, file_type="star")
+    temp_star_path = download_file_from_empiar(accession_id, file_name)
 
     try: 
         star_df = starfile.read(temp_star_path)
@@ -50,9 +47,9 @@ def load_annotation_star_file_with_cache(
             image_name, 
             tomogram_column
         )
-        filtered_df.to_json(cache_path, orient='records', indent=2)
+        filtered_df.to_json(local_data_path, orient='records', indent=2)
 
-        return str(cache_path)
+        return str(local_data_path)
         
     finally:
         Path(temp_star_path).unlink()

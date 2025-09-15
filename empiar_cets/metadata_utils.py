@@ -4,14 +4,15 @@ import re
 import struct
 from pathlib import Path
 from fs.ftpfs import FTPFS
-from typing import Any, Union, List
+from typing import Any, Union
 
 from .empiar_utils import download_file_from_empiar
 from .metadata_models import MdocFile, ZValueSection
-from .utils import make_local_file_cache
+from .utils import make_local_data_path
 
 
 logger = logging.getLogger(__name__)
+
 
 def save_mdoc_to_json(mdoc: MdocFile, filepath: str) -> None:
     
@@ -28,9 +29,7 @@ def save_alignment_to_json(alignment: dict[str, Any], filepath: str) -> None:
 def load_mdoc_from_json(filepath: str) -> MdocFile:
     
     with open(filepath, 'r') as f:
-        data = json.load(f)
-    
-    return MdocFile(**data)
+        return MdocFile.model_validate_json(f.read())
 
 
 def load_alignment_from_json(filepath: str) -> dict[str, Any]:
@@ -41,29 +40,26 @@ def load_alignment_from_json(filepath: str) -> dict[str, Any]:
     return data
 
 
-def load_mdoc_with_cache(
+def load_mdoc_file(
         accession_id: str, 
         file_pattern: str,
         mdoc_label: str,
 ) -> MdocFile:
     
-    cache_path = make_local_file_cache(
+    local_data_path = make_local_data_path(
         accession_id, 
         file_type="mdoc", 
         file_label=mdoc_label
     )
     
-    if Path(cache_path).exists():
-        return load_mdoc_from_json(cache_path)
+    if Path(local_data_path).exists():
+        return load_mdoc_from_json(local_data_path)
 
-    accession_no = accession_id.split("-")[1]
-    url_base = "https://ftp.ebi.ac.uk/empiar/world_availability/" 
-    url = f"{url_base}{accession_no}/data/{file_pattern}"
-    temp_mdoc_path = download_file_from_empiar(url, file_type='mdoc')
+    temp_mdoc_path = download_file_from_empiar(accession_id, file_pattern)
     
     try:
         mdoc = parse_mdoc_file(temp_mdoc_path)
-        save_mdoc_to_json(mdoc, cache_path)
+        save_mdoc_to_json(mdoc, local_data_path)
         
         return mdoc
         
@@ -71,29 +67,26 @@ def load_mdoc_with_cache(
         Path(temp_mdoc_path).unlink()
 
 
-def load_xf_with_cache(
+def load_xf_file(
         accession_id: str, 
         file_pattern: str,
         xf_label: str,
 ) -> dict[str, Any]:
     
-    cache_path = make_local_file_cache(
+    local_data_path = make_local_data_path(
         accession_id, 
         file_type="xf", 
         file_label=xf_label
     )
     
-    if Path(cache_path).exists():
-        return load_alignment_from_json(cache_path)
+    if Path(local_data_path).exists():
+        return load_alignment_from_json(local_data_path)
     
-    accession_no = accession_id.split("-")[1]
-    url_base = "https://ftp.ebi.ac.uk/empiar/world_availability/" 
-    url = f"{url_base}{accession_no}/data/{file_pattern}"
-    temp_xf_path = download_file_from_empiar(url, file_type='xf')
+    temp_xf_path = download_file_from_empiar(accession_id, file_pattern)
     
     try:
         alignment = parse_xf_file(temp_xf_path)
-        save_alignment_to_json(alignment, cache_path)
+        save_alignment_to_json(alignment, local_data_path)
         
         return alignment
         
