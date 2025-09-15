@@ -6,7 +6,7 @@ With poetry — from the top level of the cloned repository:
 
     poetry install
 
-There are currently no further configuration steps, since there is no API for depositing objects — all CETS data and associated metadata is saved locally within the repository directory, under "local-data" (see *Output*, below), and image files are cached in the location specified in `config.py`.
+There are currently no further configuration steps besides optionally specifying a location for the file cache — this is used only for image data when generating thumbnails (see *Thumbnails*, below), and its default location is specified in `config.py`. It can be changed by entering an alternative location for `cache_root_dirpath` in a .env file, following the example set in the .env_template file here. All other CETS data and associated metadata are saved locally within the repository directory, under "local-data" (see *Output*, below).
 
 ## Use
 ### EMPIAR — CETS
@@ -23,31 +23,31 @@ will create CETS data for that entry, which you'll find under "local-data", crea
 ### Thumbnails
 To generate thumbnails from CETS data:
 
-    poetry run create-thumbnails <EMPIAR_accession_id>
+    poetry run empiar-cets create-thumbnails <EMPIAR_accession_id>
 
 where there must be a CETS dataset json file (i.e., the output of the above command), with at least one tomogram, for the given accession ID. If there are point annotations present in the CETS dataset, then they are superimposed on the thumbnail image. 
 
 There are options here, with long and abbreviated forms:
 
-    --thumnail_size
+    --thumbnail-size
     -t
 
 can be used to specify the output thumbnail size, in pixels. Input must be two values for [x, y] e.g., for a 512-by-512 output thumbnail, you'd have `512 512`. The default is [256, 256]. The size of the output thumbnail is actually as close as is possible to the input values, using them as an upper limit for the largest dimension, whilst maintaining the aspect ratio of the original image. 
 
-    --projection_method
+    --projection-method
     -p
 
-is for choosing the method of projection on the z axis of the image. It must be one of `max`, `mean`, or `middle`, to specify a maximum projection, mean projection, or the central slice only, respectively. Note that if `middle` is chosen, then the `limit_projection` option, below, is somewhat functionless.
+is for choosing the method of projection on the z axis of the image. It must be one of `max`, `mean`, or `middle`, to specify a maximum projection, mean projection, or the central slice only, respectively. Note that if `middle` is chosen, then the `limit-projection` option, below, is somewhat functionless.
 
-    --limit_projection
+    --limit-projection
     -lp
 
 can be used to limit the number of slices to project over, according to the above method (with the aforementioned caveat that `middle` means this option becomes irrelevant). It should be expressed as a proportion of the total number of slices, so that the total number of slcies need not be known in advance. The default is 0.5, and minimum and maximum are 0.0 and 1.0.
 
-    --limit_annotation
+    --limit-annotation
     -la
 
-is similar to `--limit_projection`, in that you can choose to limit the number of annotation points, based on a proportion of their z coordinate values. And as above, the default is 0.5, and minimum and maximum are 0.0 and 1.0. This option is useful when there are a lot of annotation points, and they swamp the thumbnail image; by limiting their number, you get to see some of the image, too.
+is similar to `--limit-projection`, in that you can choose to limit the number of annotation points, based on a proportion of their z coordinate values. And as above, the default is 0.5, and minimum and maximum are 0.0 and 1.0. This option is useful when there are a lot of annotation points, and they swamp the thumbnail image; by limiting their number, you get to see some of the image, too.
 
 ## Input
 The yaml definition files are similar to those used in the EMPIAR ingest, but naturally, have a slightly different (and still developing) format, to assist in parsing EMPIAR data to the CETS specification. 
