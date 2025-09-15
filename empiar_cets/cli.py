@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import typer
+from enum import Enum
 from pathlib import Path
 from rich.logging import RichHandler
 from typing import Annotated, Optional
@@ -14,6 +15,7 @@ from .thumbnail import process_tomogram_thumbnail
 from .yaml_parsing import load_empiar_yaml, parse_regions
 from .cets.region import create_cets_region_from_region_definition
 
+
 app = typer.Typer()
 
 logging.basicConfig(
@@ -23,6 +25,13 @@ logging.basicConfig(
     handlers=[RichHandler(rich_tracebacks=True)]
 )
 logger = logging.getLogger()
+
+
+class ProjectionMethod(str, Enum):
+    mean = "mean"
+    maximum = "max"
+    middle = "middle"
+
 
 @app.command("empiar-to-cets")
 def convert_empiar_to_cets(
@@ -75,9 +84,9 @@ def create_thumbnail_images(
             )
         ] = [256, 256],
         projection_method: Annotated[
-            Optional[str], 
+            Optional[ProjectionMethod], 
             typer.Option(
-                "--projection_method", 
+                "--projection-method", 
                 "-p",
                 help="Method for projection on z-axis, must be one of 'max', 'mean', or 'middle'. Default is max.",
             )
@@ -103,19 +112,13 @@ def create_thumbnail_images(
             )
         ] = 0.5,
 ):
-    
-    valid_projection_choices = ["mean", "max", "middle"]
-    if projection_method not in valid_projection_choices:
-        raise typer.BadParameter(f"projection_method must be one of: {', '.join(valid_projection_choices)}")
 
     dataset_file_path = Path(f"local-data/{accession_id}/dataset/{accession_id}.json")
     if not os.path.exists(dataset_file_path):
         raise FileNotFoundError(f"File {dataset_file_path} not found.")
-    try:
-        with open(dataset_file_path, 'r') as f:
-            dataset_dict = json.load(f)
-    except json.JSONDecodeError as e:
-        raise
+
+    with open(dataset_file_path, 'r') as f:
+        dataset_dict = json.load(f)
     
     dict_to_cets_model(dataset_dict, Dataset)
 
@@ -126,7 +129,7 @@ def create_thumbnail_images(
                 region["tomograms"], 
                 region["annotations"], 
                 thumbnail_size, 
-                projection_method, 
+                projection_method.value, 
                 limit_projection, 
                 limit_annotation, 
             )
