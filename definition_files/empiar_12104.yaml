@@ -1,7 +1,5 @@
 regions:
   - title: "TS_006"
-  # TODO: specify type of metadata, some identifier. 
-  # Since we also have a "refined" mdocs avaiable, at least for this entry.
     movie_metadata:
       label: "TS_006_mdoc_original"
       file_pattern: "Control/frames/mdocs_ori/TS_006.mdoc"
@@ -23,7 +21,12 @@ regions:
       file_pattern: "Control/metadata/TS_006.xf"
     tomograms:
       - label: "TS_006_tomo"
-        file_pattern: "Control/tomograms/TS_006_aretomo.mrc" 
+        file_pattern: "Control/tomograms/TS_006_aretomo.mrc"
+    annotations:
+      - label: "TS_006_star"
+        annotation_type: "point_set_3D"
+        file_name: "Control/particle_lists/all_ribo_refined.star"
+        image_name: "TS_006.tomostar"
   - title: "TS_007"
     movie_stacks:
       - label: "TS_007_0-0"

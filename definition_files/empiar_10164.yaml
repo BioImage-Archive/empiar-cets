@@ -1,0 +1,12 @@
+regions: 
+  - title: "TS_01"
+    movie_metadata:
+      label: "TS_01_mdoc"
+      file_pattern: "mdoc-files/TS_01.mrc.mdoc"
+    movie_stacks:
+      - label: "TS_01_000_0.0"
+        file_pattern: "frames/TS_01_000_0.0.mrc"
+      - label: "TS_01_001_3.0"
+        file_pattern: "frames/TS_01_001_3.0.mrc"
+      - label: "TS_01_002_-3.0"
+        file_pattern: "frames/TS_01_002_-3.0.mrc"

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from empiar_cets.yaml_parsing import RegionDefinition, MovieStack
-from empiar_cets.empiar_utils import EMPIARFileList, get_files_matching_pattern
+from empiar_cets.empiar_utils import EMPIAR_BASE_URL, EMPIARFileList, get_files_matching_pattern
 from empiar_cets.metadata_models import MdocFile
 
 
@@ -42,7 +42,7 @@ def create_cets_movie_stacks_from_region_definition(
         
         accession_no = accession_id.split("-")[1]
         if len(movie_stack_paths) == 1:
-            cets_movie_stack_dict = {"path": f"https://ftp.ebi.ac.uk/empiar/world_availability/{accession_no}/data/{movie_stack_paths[0]}"}
+            cets_movie_stack_dict = {"path": f"{EMPIAR_BASE_URL}{accession_no}/data/{movie_stack_paths[0]}"}
         # TODO: else if frame-by-frame to add path to each movie frame in a list. 
 
         if movie_metadata:

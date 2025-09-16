@@ -1,5 +1,4 @@
-from typing import Dict, List, Optional, Any
-from dataclasses import dataclass, field
+from typing import List, Any
 from pydantic import BaseModel, Field
 
 
@@ -18,8 +17,8 @@ class MdocFile(BaseModel):
     """
 
     filename: str
-    global_headers: dict[str, Any] | None = None
-    z_sections: list[ZValueSection] | None = None
+    global_headers: dict[str, Any] = Field(default_factory=dict)
+    z_sections: list[ZValueSection] = Field(default_factory=list)
 
     def search_by_subframe_path(
             self, 

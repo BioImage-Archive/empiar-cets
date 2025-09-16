@@ -8,6 +8,7 @@ packages = [{include = "empiar_cets"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+pillow = "^11.1.0"
 pydantic = "^2.11.7"
 rich = "^14.0.0"
 typer = "^0.16.0"
@@ -16,6 +17,10 @@ cryoet-metadata = { git = "https://github.com/Chr1st0p43rR/cryoet-geometry-fork.
 ruamel-yaml = "^0.18.14"
 fs = "^2.4.16"
 parse = "^1.20.2"
+pydantic-settings = "^2.10.1"
+gemmi = "^0.7.3"
+starfile = "^0.5.13"
+mrcfile = "^1.5.4"
 
 [tool.poetry.scripts]
 empiar-cets = "empiar_cets.cli:app"
